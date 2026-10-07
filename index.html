@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <title>CypherX | Network Intrusion Detection</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">CX</div>
+      <div><strong>CypherX</strong><span>NIDS • ML Security</span></div>
+    </div>
+    <div class="side-label">WORKSPACE</div>
+    <nav class="nav">
+      <button class="nav-item active" data-section="dashboard"><span>⌂</span> Dashboard</button>
+      <button class="nav-item" data-section="detection"><span>◈</span> Traffic Detection</button>
+      <button class="nav-item" data-section="analytics"><span>◒</span> Analytics</button>
+      <button class="nav-item" data-section="performance"><span>▥</span> Model Performance</button>
+      <button class="nav-item" data-section="history"><span>◷</span> Detection History</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="api-card">
+        <div class="api-row"><span class="status-dot" id="apiDot"></span><strong id="apiText">Checking API</strong></div>
+        <small id="apiDetail">Connecting to local model server…</small>
+      </div>
+      <div class="version">CypherX v2.0 • NSL-KDD</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn">☰</button>
+        <div><div class="crumb">SECURITY / <span id="crumbText">OVERVIEW</span></div><h1 id="pageTitle">Security overview</h1><p id="pageSubtitle">Network intrusion detection powered by a trained NSL-KDD classifier.</p></div>
+      </div>
+      <div class="top-actions">
+        <span class="server-pill"><i id="serverDot"></i><span id="serverText">Local model</span></span>
+        <button class="icon-btn" id="healthBtn" title="Check API health">↻</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="dashboard" class="section active">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span></span> MACHINE LEARNING • NETWORK SECURITY</div>
+            <h2>Detect suspicious network connections with <em>CypherX.</em></h2>
+            <p>Submit a 41-feature NSL-KDD connection record and get a real prediction from the trained model running on your machine.</p>
+            <div class="hero-actions"><button class="btn primary" data-go="detection">Run live detection <b>→</b></button><button class="btn ghost" data-go="analytics">View analytics</button></div>
+          </div>
+          <div class="hero-visual">
+            <div class="radar"><div class="radar-ring r1"></div><div class="radar-ring r2"></div><div class="radar-line"></div><div class="radar-dot d1"></div><div class="radar-dot d2"></div><div class="radar-dot d3"></div><div class="radar-center">CX</div></div>
+            <div class="scan-label">MODEL STATUS <strong>READY</strong></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><span>MODEL</span><strong id="dashModel">—</strong><small>selected by F1 score</small></div>
+          <div class="stat-card"><span>TEST ACCURACY</span><strong id="dashAccuracy">—</strong><small>NSL-KDD test set</small></div>
+          <div class="stat-card"><span>PRECISION</span><strong id="dashPrecision">—</strong><small>attack prediction precision</small></div>
+          <div class="stat-card"><span>F1 SCORE</span><strong id="dashF1">—</strong><small>balanced classification metric</small></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel architecture">
+            <div class="panel-head"><div><span class="section-kicker">PIPELINE</span><h3>How a detection works</h3></div></div>
+            <div class="pipeline"><div><b>01</b><span>Traffic<br>features</span></div><i>→</i><div><b>02</b><span>Preprocess<br>41 fields</span></div><i>→</i><div><b>03</b><span>Decision<br>Tree</span></div><i>→</i><div class="last"><b>04</b><span>Normal /<br>Attack</span></div></div>
+          </div>
+          <div class="panel quick-panel">
+            <div class="panel-head"><div><span class="section-kicker">QUICK TEST</span><h3>Try a real dataset sample</h3></div></div>
+            <div class="quick-actions"><button class="sample-card normal-card" data-sample="normal"><span>✓</span><div><strong>Normal traffic</strong><small>Load NSL-KDD normal record</small></div><b>→</b></button><button class="sample-card attack-card" data-sample="attack"><span>!</span><div><strong>Attack traffic</strong><small>Load NSL-KDD DoS record</small></div><b>→</b></button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="detection" class="section">
+        <div class="section-banner">
+          <div><span class="section-kicker">LIVE CLASSIFICATION</span><h2>Traffic Detection</h2><p>Build a queue of up to 10 complete NSL-KDD connection records and classify them together.</p></div>
+          <div class="sample-actions"><button class="btn ghost" data-sample="normal">Load Normal</button><button class="btn danger-outline" data-sample="attack">Load Attack</button><button class="btn ghost" id="loadMixed">Load 5 Samples</button></div>
+        </div>
+        <div id="errorBox" class="error-box hidden"><strong>Prediction failed</strong><span id="errorText"></span><button id="errorClose">×</button></div>
+
+        <div class="batch-toolbar panel">
+          <div class="batch-summary"><div><span class="section-kicker">TRAFFIC QUEUE</span><strong id="recordCount">1 / 10 connections</strong><small>Add multiple records and classify them in one request.</small></div><div class="batch-actions"><button class="btn ghost" id="addRecord">+ Add connection</button><button class="btn ghost" id="duplicateRecord">Duplicate current</button><button class="btn ghost" id="clearRecords">Clear all</button><button class="btn primary" id="predictAll"><span>Classify all</span><b>→</b></button></div></div>
+          <div class="record-tabs" id="recordTabs"></div>
+        </div>
+
+        <div class="detection-grid">
+          <div class="panel form-panel">
+            <div class="panel-head form-head"><div><span class="section-kicker">INPUT VECTOR</span><h3 id="activeRecordTitle">Connection 1</h3><p class="muted">All 41 NSL-KDD features are available below.</p></div><span class="feature-count">41 FEATURES</span></div>
+            <form id="predictionForm">
+              <div class="form-section"><h4>Connection</h4><div id="connectionGrid" class="feature-grid"></div></div>
+              <div class="form-section"><h4>Content & authentication</h4><div id="contentGrid" class="feature-grid"></div></div>
+              <div class="form-section"><h4>Traffic statistics</h4><div id="trafficGrid" class="feature-grid"></div></div>
+              <div class="form-section"><h4>Destination-host statistics</h4><div id="hostGrid" class="feature-grid"></div></div>
+              <div class="form-bottom"><span>Record <b id="activeRecordNumber">1</b> of <b>10</b></span><button class="btn primary" id="predictBtn" type="submit"><span>Classify this connection</span><b>→</b></button></div>
+            </form>
+          </div>
+
+          <aside class="panel result-panel">
+            <div class="panel-head"><div><span class="section-kicker">MODEL OUTPUT</span><h3>Detection results</h3></div><span class="live-badge">● LIVE</span></div>
+            <div id="resultEmpty" class="result-empty"><div class="empty-icon">◎</div><strong>Waiting for traffic</strong><p>Classify one connection or run the whole queue.</p></div>
+            <div id="result" class="hidden">
+              <div class="result-main"><span id="resultBadge" class="result-badge">—</span><strong id="resultTitle">—</strong><p id="resultNote">—</p></div>
+              <div class="confidence-box"><div><span>MODEL CONFIDENCE</span><strong id="confidence">—</strong></div><div class="confidence-track"><i id="confidenceBar"></i></div></div>
+              <div class="result-details"><div><span>Classification</span><strong id="attackType">—</strong></div><div><span>Model</span><strong id="resultModel">—</strong></div><div><span>Processed fields</span><strong id="resultFields">41 / 41</strong></div><div><span>Time</span><strong id="resultTime">—</strong></div></div>
+              <div class="result-advice" id="resultAdvice"></div>
+            </div>
+            <div id="batchResults" class="batch-results hidden"><div class="batch-results-head"><strong>Batch results</strong><span id="batchSummaryText">—</span></div><div id="batchResultList"></div></div>
+            <div class="result-footer"><span class="status-dot"></span> Predictions run locally through FastAPI</div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="analytics" class="section">
+        <div class="section-banner"><div><span class="section-kicker">EVALUATION</span><h2>Analytics</h2><p>Performance and attack-category analysis from the NSL-KDD test set.</p></div></div>
+        <div class="stats-grid compact"><div class="stat-card"><span>NORMAL</span><strong id="normalCount">—</strong><small>test samples</small></div><div class="stat-card"><span>DoS</span><strong id="dosCount">—</strong><small>attack samples</small></div><div class="stat-card"><span>PROBE</span><strong id="probeCount">—</strong><small>attack samples</small></div><div class="stat-card"><span>R2L + U2R</span><strong id="rareCount">—</strong><small>harder categories</small></div></div>
+        <div class="grid-2 analytics-grid">
+          <div class="panel"><div class="panel-head"><div><span class="section-kicker">CLASSIFICATION</span><h3>Confusion matrix</h3></div></div><div id="confusion" class="matrix"></div><div class="matrix-legend"><span><i></i> Correct</span><span><i class="miss"></i> Misclassified</span></div></div>
+          <div class="panel"><div class="panel-head"><div><span class="section-kicker">FEATURE SIGNAL</span><h3>Most important features</h3><p>Decision Tree feature importance</p></div></div><div id="features" class="bars"></div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><span class="section-kicker">ATTACK TYPES</span><h3>Detection recall by category</h3><p>Higher is better. Rare classes have fewer examples.</p></div></div><div id="categoryBars" class="category-grid"></div></div>
+      </section>
+
+      <section id="performance" class="section">
+        <div class="section-banner"><div><span class="section-kicker">MODEL EVALUATION</span><h2>Model Performance</h2><p>Three candidate classifiers were evaluated on the same test set.</p></div></div>
+        <div class="panel table-panel"><div id="modelTable" class="table-wrap"></div></div>
+        <div class="info-strip"><div class="info-icon">i</div><div><strong>Selected model</strong><p>CypherX uses the candidate with the highest F1 score for live inference. Current trained artifact: <b id="selectedModelText">—</b>.</p></div></div>
+      </section>
+
+      <section id="history" class="section">
+        <div class="section-banner"><div><span class="section-kicker">SESSION LOG</span><h2>Detection History</h2><p>Your recent predictions are stored locally in this browser.</p></div><button class="btn ghost" id="clearHistory">Clear history</button></div>
+        <div class="panel table-panel"><div class="history-toolbar"><span id="historyCount">0 detections</span><input id="historySearch" class="search" placeholder="Search prediction history…"></div><div id="historyTable" class="table-wrap"></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="toast hidden" id="toast"><span id="toastIcon">✓</span><div><strong id="toastTitle">Done</strong><small id="toastText"></small></div></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
