@@ -1,0 +1,139 @@
+{
+  "model": "Decision Tree",
+  "metrics": {
+    "accuracy": 0.7896557842441447,
+    "precision": 0.9636676217765043,
+    "recall": 0.6551858489830905,
+    "f1": 0.7800352537341126
+  },
+  "confusion_matrix": [
+    [
+      9394,
+      317
+    ],
+    [
+      4425,
+      8408
+    ]
+  ],
+  "model_comparison": [
+    {
+      "accuracy": 0.7538591199432222,
+      "precision": 0.9176605504587156,
+      "recall": 0.623548663601652,
+      "f1": 0.7425416415348212,
+      "model": "Logistic Regression"
+    },
+    {
+      "accuracy": 0.7896557842441447,
+      "precision": 0.9636676217765043,
+      "recall": 0.6551858489830905,
+      "f1": 0.7800352537341126,
+      "model": "Decision Tree"
+    },
+    {
+      "accuracy": 0.7713804116394606,
+      "precision": 0.9679463741620963,
+      "recall": 0.6188732174861685,
+      "f1": 0.7550147352409925,
+      "model": "Random Forest"
+    }
+  ],
+  "test_distribution": {
+    "Normal": 9711,
+    "DoS": 7458,
+    "R2L": 2885,
+    "Probe": 2421,
+    "U2R": 67,
+    "Other": 2
+  },
+  "attack_category_analysis": [
+    {
+      "category": "Normal",
+      "samples": 9711,
+      "attack_detection_recall": 0.9673566059108227
+    },
+    {
+      "category": "DoS",
+      "samples": 7458,
+      "attack_detection_recall": 0.8252882810404935
+    },
+    {
+      "category": "Probe",
+      "samples": 2421,
+      "attack_detection_recall": 0.8203221809169765
+    },
+    {
+      "category": "R2L",
+      "samples": 2885,
+      "attack_detection_recall": 0.08457538994800694
+    },
+    {
+      "category": "U2R",
+      "samples": 67,
+      "attack_detection_recall": 0.34328358208955223
+    }
+  ],
+  "feature_importance": [
+    {
+      "feature": "src_bytes",
+      "importance": 0.7417417183660686
+    },
+    {
+      "feature": "service_ecr_i",
+      "importance": 0.07993275803049053
+    },
+    {
+      "feature": "service_http",
+      "importance": 0.05085693701496317
+    },
+    {
+      "feature": "dst_host_same_srv_rate",
+      "importance": 0.029074045279344846
+    },
+    {
+      "feature": "dst_bytes",
+      "importance": 0.02650723755425712
+    },
+    {
+      "feature": "hot",
+      "importance": 0.024355162354985846
+    },
+    {
+      "feature": "logged_in",
+      "importance": 0.00955746793502784
+    },
+    {
+      "feature": "duration",
+      "importance": 0.00527286252186174
+    },
+    {
+      "feature": "dst_host_srv_count",
+      "importance": 0.0051268162771026145
+    },
+    {
+      "feature": "protocol_type_tcp",
+      "importance": 0.004133743588902113
+    },
+    {
+      "feature": "dst_host_same_src_port_rate",
+      "importance": 0.004033480922025291
+    },
+    {
+      "feature": "dst_host_rerror_rate",
+      "importance": 0.0035099836140935034
+    },
+    {
+      "feature": "count",
+      "importance": 0.002182001204707655
+    },
+    {
+      "feature": "dst_host_srv_serror_rate",
+      "importance": 0.0016032631686984046
+    },
+    {
+      "feature": "dst_host_diff_srv_rate",
+      "importance": 0.0013890130704171104
+    }
+  ]
+}
